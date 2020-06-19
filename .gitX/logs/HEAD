@@ -1,9 +1,0 @@
-0000000000000000000000000000000000000000 22e7da094a18f006c5ad6916d841cfbcf2433150 Eitho <62159998+Eitho-obviously@users.noreply.github.com> 1592451560 +0200	commit (initial): Initial commit
-22e7da094a18f006c5ad6916d841cfbcf2433150 22e7da094a18f006c5ad6916d841cfbcf2433150 Eitho <62159998+Eitho-obviously@users.noreply.github.com> 1592584159 +0200	checkout: moving from master to master
-22e7da094a18f006c5ad6916d841cfbcf2433150 22e7da094a18f006c5ad6916d841cfbcf2433150 Eitho <62159998+Eitho-obviously@users.noreply.github.com> 1592584167 +0200	checkout: moving from master to master
-22e7da094a18f006c5ad6916d841cfbcf2433150 2548f41e143ff515d0765c786e525d614623a1b2 Eitho <62159998+Eitho-obviously@users.noreply.github.com> 1592584291 +0200	pull --tags origin master: Fast-forward
-2548f41e143ff515d0765c786e525d614623a1b2 d43a0c54793705886f8993b92b1c2044518a4867 Eitho <62159998+Eitho-obviously@users.noreply.github.com> 1592584475 +0200	commit: test
-d43a0c54793705886f8993b92b1c2044518a4867 327f2c19e32a5ceaa1f8a232e765b13125dd3147 Eitho <62159998+Eithoo@users.noreply.github.com> 1592588151 +0200	commit: ignore usuned files
-327f2c19e32a5ceaa1f8a232e765b13125dd3147 d43a0c54793705886f8993b92b1c2044518a4867 Eitho <62159998+Eithoo@users.noreply.github.com> 1592588967 +0200	reset: moving to HEAD~
-d43a0c54793705886f8993b92b1c2044518a4867 2548f41e143ff515d0765c786e525d614623a1b2 Eitho <62159998+Eithoo@users.noreply.github.com> 1592588973 +0200	reset: moving to HEAD~
-2548f41e143ff515d0765c786e525d614623a1b2 209a6808d17044dfec003ebbf65dbaad583333de Eitho <62159998+Eithoo@users.noreply.github.com> 1592589365 +0200	commit: Initial commit
