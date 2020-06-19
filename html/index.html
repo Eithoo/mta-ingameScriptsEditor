@@ -1,0 +1,222 @@
+<html lang='pl'>
+	<head>
+		<title>Eitho's Ingame Scripts Editor</title>
+		<meta charset='UTF-8'>
+		<meta name='author' content='Eitho'>
+		<style>
+			html{
+				background: rgba(0,0,0,0);
+			}
+			body{
+				background: rgb(245,180,0);
+				background: linear-gradient(321deg, rgba(245,180,0,0.95) 0%, rgba(255,0,0,0.95) 100%);
+				color: white;
+				
+				text-align: center;
+				font-family: 'Lato', sans-serif;
+				font-size: 1.5em;
+				overflow: hidden;
+			}
+			.main{
+				display: flex;
+				justify-content: space-evenly;
+				align-items: center;
+				align-content: stretch;
+				flex-wrap: wrap;
+				height: 90vh;
+				overflow: hidden; /* albo overlay */
+			/*	word-break: break-all; */
+				margin-top: -3vh;
+				text-shadow: 1px 1px 2px #000;
+			}
+			#desc{
+				font-size: 1.5em;
+				margin-top: 5vh;
+				text-shadow: 1px 1px 2px #000;
+			}
+			#desc span{
+				display: block;
+				font-size: 1rem;
+			}
+
+			.scriptToSelect{
+				display: block;
+				font-size: 0.7em;
+
+			}
+			.small{
+				color: #bdbdbd !important;
+				font-size: .75rem;
+				margin-right: 0.5em;
+			}
+			.window {
+				min-height: 30%;
+				max-height: 100%;
+				width: 30%;
+				text-align: center!important;
+				border-radius: 30px;
+				background-color: rgba(0, 0, 0, 0.2);
+				border: 3px solid white;
+			}
+			#desc button{
+				background-color: pink;
+			}
+
+			.edit-window {
+				width: 90vw;
+				height: 80vh;
+				background: #fafbfc;
+				border-radius: 5px;
+				box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+				text-align: left;
+				position: relative;
+			}
+			.window-border {
+				display: flex;
+				top: 0;
+				height: 50px;
+				border-top-left-radius: 5px;
+				border-top-right-radius: 5px;
+				background: #e6e9ed;
+			}
+			.window-border .language {
+				position: relative;
+				top: 10px;
+				right: -655px;
+				-webkit-appearance: none;
+				appearance: none;
+				background: none;
+				outline: none;
+				text-align: center;
+				height: 30px;
+				border: none;
+			}
+			.window-border .close, .window-border .minimize, .window-border .maximize {
+				top: 17px;
+				left: 10px;
+			}
+			.window-border .close {
+				position: relative;
+				width: 15px;
+				height: 15px;
+				border-radius: 28px;
+				background: #ed5565;
+			}
+			.window-border .minimize {
+				position: relative;
+				margin-left: 8px;
+				width: 15px;
+				height: 15px;
+				border-radius: 28px;
+				background: #ffce54;
+			}
+			.window-border .maximize {
+				position: relative;
+				margin-left: 8px;
+				width: 15px;
+				height: 15px;
+				border-radius: 28px;
+				background: #48cfad;
+			}
+			.input-area {
+				position: relative;
+				outline: none;
+			}
+			#editor {
+				text-shadow: none;
+				margin: 0;
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				height: 73vh;
+			}
+
+			.selectScriptButton{
+				border-radius:20px;
+				background-color: rgb(0, 140, 255);
+				margin-right: 5%;
+				overflow: hidden;
+			}
+			
+			#sideIcons{
+				position: fixed;
+				right: 0%;
+				top: 45%;
+				height: 5%;
+				width: 5%;
+				/*background-color: yellow;*/
+				z-index: 9999999999;
+			}
+			#sideIcons img{
+				width: 75%;
+				height: auto;
+				transition: all 0.5s;
+			}
+
+			#sideIcons img:hover{
+				background-color: rgba(0,0,0,0.5);
+			}
+
+
+
+		</style>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&display=swap" rel="stylesheet">
+		<link href='./select.css' rel='stylesheet'>
+		<link rel="stylesheet" href="./libs/iziToast.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="./libs/iziToast.min.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div id='desc'>
+			Eitho's Ingame Scripts Editor v1.0
+			<div id='desctext'>
+				<span>Wybierz skrypt z listy, który chcesz edytować.</span>
+				<span>to w trybie edycji: Aby zamknąć, zminimalizować lub przejść do wybierania skryptu, użyj kolorowych przycisków.</span>
+			</div>
+			<!--<button>ee</button>-->
+		</div>
+		<div class='main'>
+			<div id='selectScript' >
+				<form>
+					<input class="chosen-value" type="text" value="" placeholder="Wyszukaj">
+					<ul class="value-list"></ul>
+				</form>
+			</div>
+			<div class="edit-window" id='edit' style='display: none;' >
+				<div class="window-border">
+				<span class="close"></span>
+				<span class="minimize"></span>
+				<span class="maximize"></span>
+				<select class="language">
+					<option selected>Domyślny styl - VSCode</option>
+					<option>Tu jakieś inne dodam</option>
+					<option>-------------------</option>
+				</select>
+				</div>
+				<div class="input-area">
+					<pre id='editor'></pre>
+				</div>
+			</div>
+		</div>
+		<div id='sideIcons'>
+			<img src='img/save.png'>
+		</div>
+	</body>
+	<script src='./editor.js'></script>
+	<script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+	var aeditor = ace.edit("editor");
+	aeditor.session.setMode("ace/mode/lua");
+	aeditor.setOptions({
+		//maxLines: Infinity,
+		indentSubsequentLines: true,
+		wrap: true
+	})
+    aeditor.setTheme("ace/theme/VSCode");
+   // editor.setTheme("ace/theme/pastel_on_dark");
+   // editor.setTheme("ace/theme/monokai");
+</script>
+</html>
