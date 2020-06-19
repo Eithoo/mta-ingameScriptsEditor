@@ -97,6 +97,8 @@
     <file src='html/libs/ace/theme-twilight.js' />
     <file src='html/libs/ace/theme-vibrant_ink.js' />
     <file src='html/libs/ace/theme-xcode.js' />
+    <file src='html/libs/ace/theme-atom_dark.js' />
+    <file src='html/libs/ace/theme-vscode_dark.js' />
     <file src='html/libs/ace/worker-css.js' />
     <file src='html/libs/ace/worker-html.js' />
     <file src='html/libs/ace/worker-javascript.js' />

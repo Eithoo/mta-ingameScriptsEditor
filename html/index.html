@@ -80,11 +80,9 @@
 				background: #e6e9ed;
 			}
 			.window-border .language {
-				position: relative;
+				position: absolute;
 				top: 10px;
-				right: -655px;
-				-webkit-appearance: none;
-				appearance: none;
+				right: 2%;
 				background: none;
 				outline: none;
 				text-align: center;
@@ -190,8 +188,8 @@
 				<span class="close"></span>
 				<span class="minimize"></span>
 				<span class="maximize"></span>
-				<select class="language">
-					<option selected>Domyślny styl - VSCode</option>
+				<select class="language" onchange="changeTheme(this)">
+					<option selected>Domyślny styl - Visual Studio Code (Dark)</option>
 					<option>Tu jakieś inne dodam</option>
 					<option>-------------------</option>
 				</select>
@@ -212,11 +210,10 @@
 	aeditor.session.setMode("ace/mode/lua");
 	aeditor.setOptions({
 		//maxLines: Infinity,
-		indentSubsequentLines: true,
-		wrap: true
+		wrap: true,
+		showPrintMargin: false
 	})
-    aeditor.setTheme("ace/theme/VSCode");
-   // editor.setTheme("ace/theme/pastel_on_dark");
-   // editor.setTheme("ace/theme/monokai");
+	aeditor.setTheme("ace/theme/vscode_dark");
+	aeditor.setScrollSpeed(4);
 </script>
 </html>

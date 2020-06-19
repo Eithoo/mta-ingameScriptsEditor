@@ -26,7 +26,7 @@ addEventHandler('getFilenamesFromResource-s', resourceRoot, function(resourceNam
 	local meta = xmlLoadFile(':'..resourceName..'/meta.xml', true);
 	local resource = getResourceFromName(resourceName);
     if (not meta or not resource) then
-        triggerClientEvent(client, 'getFilenamesFromResource-c', resourceRoot, false, 'false1');
+        triggerClientEvent(client, 'getFilenamesFromResource-c', resourceRoot, false, false);
         return
 	end
 	local resourceRunning = getResourceState(resource) == 'running' and true or false;
@@ -43,7 +43,7 @@ addEventHandler('getFilenamesFromResource-s', resourceRoot, function(resourceNam
         end
     end
     if (#files == 0) then
-		triggerClientEvent(client, 'getFilenamesFromResource-c', resourceRoot, false, 'false2');
+		triggerClientEvent(client, 'getFilenamesFromResource-c', resourceRoot, false, false);
         return;
     end
     triggerClientEvent(client, 'getFilenamesFromResource-c', resourceRoot, resourceName, files, resourceRunning);
@@ -71,18 +71,30 @@ addEventHandler('saveScript-s', resourceRoot, function(path, resourceData)
 	if (not resourceData or resourceData == '') then
 		return
 	end
-	-- pozniejco ja robie
-	outputChatBox('-------------------------')
-	outputChatBox('filename '..path);
-	outputChatBox('res data '..resourceData:len());
-
-
 	local file = fileOpen(path);
 	if (not file) then
 		triggerClientEvent(client, 'createNotification', resourceRoot, 'error', 'Błąd', 'Wystąpił błąd przy otwieraniu pliku w celu zapisu.');
-		return
+		return;
 	end
 	fileWrite(file, resourceData);
 	fileClose(file);
-	triggerClientEvent(client, 'createNotification', resourceRoot, 'success', 'Sukces', 'Pomyślnie zapisano plik.');
+--	triggerClientEvent(client, 'createNotification', resourceRoot, 'success', 'Sukces', 'Pomyślnie zapisano plik.', 1000);
+	triggerClientEvent(client, 'saveScript-c', resourceRoot);
+end)
+
+addEvent('restartResource-s', true)
+addEventHandler('restartResource-s', resourceRoot, function(resourceName)
+	local resource = getResourceFromName(resourceName);
+	if (not resource) then
+		triggerClientEvent(client, 'createNotification', resourceRoot, 'error', 'Błąd', 'Nie znaleziono skryptu.', 4000);
+		return
+	end
+	local running = getResourceState(resource) == 'running' and true or false;
+	if (running) then
+		restartResource(resource);
+		triggerClientEvent(client, 'createNotification', resourceRoot, 'success', 'Sukces', 'Zrestartowano zasób <b>'..resourceName..'</b>.', 2000);
+	else
+		startResource(resource);
+		triggerClientEvent(client, 'createNotification', resourceRoot, 'success', 'Sukces', 'Uruchomiono zasób <b>'..resourceName..'</b>.', 2000);
+	end
 end)

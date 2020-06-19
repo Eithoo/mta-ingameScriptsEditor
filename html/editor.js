@@ -156,71 +156,67 @@ function askForFilename(resourceName, resourceFiles, resourceRunning){
 						files.push(`<option disabled>${file}</option>`);
 		}
 		iziToast.question({
-				layout: 1,
-				drag: false,
-				timeout: false,
-				close: false,
-				overlay: true,
-				displayMode: 1,
-				id: 'question',
-				progressBar: true,
-				title: resourceName || 'siema',
-				message: 'Wybierz plik do edycji',
-				position: 'center',
-				inputs: [
-						[`<select>
-								${files.join(' ')}
-						</select>`, 'change', function (instance, toast, select, e) {
-								console.info(select.options[select.selectedIndex].value);
-								// console.info(select);
-						}]
-				],
-				buttons: [
-						['<button><b>Edytuj</b></button>', function (instance, toast, button, e, inputs) {
+			layout: 1,
+			drag: false,
+			timeout: false,
+			close: false,
+			overlay: true,
+			displayMode: 1,
+			id: 'question',
+			progressBar: true,
+			title: resourceName || 'siema',
+			message: 'Wybierz plik do edycji',
+			position: 'center',
+			inputs: [
+				[`<select>
+					${files.join(' ')}
+				</select>`, 'change', function (instance, toast, select, e) {
+					console.info(select.options[select.selectedIndex].value);
+					// console.info(select);
+				}]
+			],
+			buttons: [
+				['<button><b>Edytuj</b></button>', function (instance, toast, button, e, inputs) {
+					const Filename = inputs[0].options[inputs[0].selectedIndex].value;
+					if (Filename == 'Wybierz') return;
 
-								console.info(button);
-								console.info(e);
+					instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
 
-								const Filename = inputs[0].options[inputs[0].selectedIndex].value;
-								if (Filename == 'Wybierz') return;
-								alert(Filename)
-								/////////////// tu wlaczyc edycje pliku //////////
+					mta.triggerEvent('getFileContent-js', `:${resourceName}/${Filename}`);
 
-								instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+					iziToast.success({
+							zindex: 9999,
+							timeout: 2000,
+							title: 'Success',
+							overlay: true,
+							message: 'Rozpoczęto edycję pliku <b>'+Filename+'</b>.',
+							position: 'center',
+							closeOnClick: true,
+							pauseOnHover: false,
+							targetFirst: false
+					});
 
-								mta.triggerEvent('getFileContent-js', `:${resourceName}/${Filename}`);
-
-								iziToast.success({
-										id: 'success',
-										zindex: 9999,
-										timeout: 3000,
-										title: 'Success',
-										overlay: true,
-										message: 'Rozpoczęto edycję pliku <b>'+Filename+'</b>.',
-										position: 'center'
-								});
-
-						}, false], // true to focus
-						['<button>Anuluj</button>', function (instance, toast, button, e) {
-								 instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
-						}]
-				],
-				onClosing: function(instance, toast, closedBy){
-						// console.info('Closing | closedBy: ' + closedBy);
-				},
-				onClosed: function(instance, toast, closedBy){
-						// console.info('Closed | closedBy: ' + closedBy);
-				}
+				}, false], // true to focus
+				['<button>Anuluj</button>', function (instance, toast, button, e) {
+					instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+				}]
+			],
+			onClosing: function(instance, toast, closedBy){
+				// console.info('Closing | closedBy: ' + closedBy);
+			},
+			onClosed: function(instance, toast, closedBy){
+				// console.info('Closed | closedBy: ' + closedBy);
+			}
 		});
 		if (!resourceRunning){
-				iziToast.warning({
-						zindex: 9999,
-						timeout: 30000,
-						title: 'Uwaga',
-						overlay: true,
-						message: 'Zasób jest wyłączony - nie da się zobaczyć treści plików.<br>Włącz skrypt <b>'+resourceName+'</b>, aby móc przeglądać i edytować jego treść.',
-						position: 'center'
-				});
+			iziToast.warning({
+				zindex: 9999,
+				timeout: 30000,
+				title: 'Uwaga',
+				overlay: true,
+				message: 'Zasób jest wyłączony - nie da się zobaczyć treści plików.<br>Włącz skrypt <b>'+resourceName+'</b>, aby móc przeglądać i edytować jego treść.',
+				position: 'center'
+			});
 		}
 }
 
@@ -231,16 +227,157 @@ for (const form of forms){
 		form.addEventListener("submit",function(e){e.preventDefault(); return false;});
 }
 
-mta.triggerEvent('switchToScriptsList');
+try {
+	mta.triggerEvent('switchToScriptsList')
+} catch (error) {
+	console.warn(error);
+}
 
 
 
-document.getElementById('sideIcons').addEventListener('click', () => {
+document.getElementById('sideIcons').addEventListener('click', saveScript);
+window.addEventListener('keypress', function(event) {
+	if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
+	saveScriptKeyboardShortcut();
+	event.preventDefault()
+	return false;
+})
+
+Array.prototype.last = function() {
+    return this[this.length - 1];
+}
+
+function saveScriptKeyboardShortcut(){
+	const filename = currentlyEditing.replace(':', '').split('/').last();
+	iziToast.question({
+		layout: 1,
+		drag: false,
+		timeout: 10000,
+		close: false,
+		overlay: true,
+		displayMode: 1,
+		id: 'question',
+		progressBar: true,
+		title: 'CTRL+S',
+		message: `Czy chcesz zapisać plik <b>${filename}</b>?`,
+		position: 'center',
+		buttons: [
+			['<button><b>Zapisz</b></button>', function (instance, toast, button, e, inputs) {
+				saveScript();
+				instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+			}, true], // true to focus
+			['<button>Anuluj</button>', function (instance, toast, button, e) {
+				instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+			}]
+		]
+	});
+}
+
+function saveScript(){
 	const edit = document.getElementById('edit');
 	if (!edit) return;
 	if (edit.style.display != 'block') return;
 
-	////////////////////////
 	const resourceData = aeditor.getValue();
 	mta.triggerEvent('saveScript', currentlyEditing, resourceData);
-});
+}
+
+function askForRestart(){
+	const resourceName = currentlyEditing.replace(':', '').split('/')[0];
+	iziToast.question({
+		layout: 1,
+		drag: false,
+		timeout: 10000,
+		close: false,
+		overlay: true,
+		displayMode: 1,
+		progressBar: true,
+		title: 'Wprowadzenie zmian',
+		message: `Czy chcesz ponownie uruchomić zasób <b>${resourceName}</b>?`,
+		position: 'center',
+		buttons: [
+			['<button><b>Uruchom ponownie</b></button>', function (instance, toast, button, e, inputs) {
+				mta.triggerEvent('restartResource-c', resourceName);
+				instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+			}, true], // true to focus
+			['<button>Anuluj</button>', function (instance, toast, button, e) {
+				instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+			}]
+		]
+	});
+}
+
+const themes = {
+	'Domyślny styl: Visual Studio Code (Dark)': 'vscode_dark',
+	'Atom (Dark)': 'atom_dark',
+	'GitHub': 'github',
+	'Xcode': 'xcode',
+	'Monokai': 'monokai',
+	'Pastel on dark': 'pastel_on_dark',
+	'Ambiance': 'ambiance',
+	'Chaos': 'chaos',
+	'Chrome': 'chrome',
+	'Clouds': 'clouds',
+	'Clouds midnight': 'clouds_midnight',
+	'Cobalt': 'cobalt',
+	'Crimson editor': 'crimson_editor',
+	'Dawn': 'dawn',
+	'Dracula': 'dracula',
+	'Dreamweaver': 'dreamweaver',
+	'Eclipse': 'eclipse',
+	'Gob': 'gob',
+	'Gruvbox': 'gruvbox',
+	'Idle fingers': 'idle_fingers',
+	'I-plastic': 'iplastic',
+	'Katzenmilch': 'katzenmilch',
+	'KR': 'kr_theme',
+	'Kuroir': 'kuroir',
+	'Merbivore': 'merbivore',
+	'Merbivore soft': 'merbivore_soft',
+	'Mono industrial': 'mono_industrial',
+	'Nord (dark)': 'nord_dark',
+	'Solarized (dark)': 'solarized_dark',
+	'Solarized (light)': 'solarized_light',
+	'SQL Server': 'sqlserver',
+	'Terminal': 'terminal',
+	'Textmate': 'textmate',
+	'Tomorrow': 'tomorrow',
+	'Tommorow Night': 'tomorrow_night',
+	'Tomorrow Night - blue': 'tomorrow_night_blue',
+	'Tomorrow Night - bright': 'tomorrow_night_bright',
+	'Tomorrow Night - eighties': 'tomorrow_night_eihties',
+	'Twilight': 'twilight',
+	'Vibrant Ink': 'vibrant_ink'
+};
+
+function loadThemes(){
+	const select = document.querySelector('.language');
+	if (!select) return false;
+	select.innerHTML = '';
+
+	for (const theme in themes){
+		let option = document.createElement('option');
+		option.innerText = theme;
+		select.appendChild(option);
+	}
+}
+loadThemes();
+
+function changeTheme(theme){
+	if (!theme) return false;
+	try {
+		const newTheme = themes[theme.value];
+		aeditor.setTheme(`ace/theme/${newTheme}`);
+		iziToast.success({
+			title: 'OK',
+			message: `Zmieniono styl na <b>${(theme.value).replace('Domyślny styl: ', '')}</b>.`,
+		});
+	} catch (error) {
+		iziToast.error({
+			title: 'Błąd',
+			message: `Wystąpił nieznany błąd przy zmianie stylu:\n'${error}`
+		});
+		return false;
+	}
+	return true;
+}
