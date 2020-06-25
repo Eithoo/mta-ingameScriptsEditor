@@ -114,7 +114,7 @@ end)
 addEvent('saveScript', true)
 addEventHandler('saveScript', resourceRoot, function(path, resourceData)
 	if (not path or not resourceData) then
-		return
+		return;
 	end
 	triggerServerEvent('saveScript-s', resourceRoot, path, resourceData);
 end)
@@ -127,22 +127,28 @@ end)
 addEvent('createNotification', true);
 addEventHandler('createNotification', resourceRoot, function(type, title, text, timeout)
 	if (not type or not text) then
-		return
+		return;
 	end
 	if (not title) then
 		title = type;
 	end
 	local b = guiGetBrowser(guiBrowser);
-	executeBrowserJavascript(b, "iziToast."..type.."({id: 'success', zindex: 9999, timeout: "..(timeout or 3000)..", title: "..inspect(title)..", overlay: true, message: "..inspect(text)..", position: 'center'});")
-
+	executeBrowserJavascript(b, "iziToast."..type.."({zindex: 9999, timeout: "..(timeout or 3000)..", title: "..inspect(title)..", overlay: true, message: "..inspect(text)..", position: 'center'});");
 end)
 
 addEvent('restartResource-c', true)
 addEventHandler('restartResource-c', resourceRoot, function(resourceName)
 	if (not resourceName) then
-		return
+		return;
 	end
 	triggerServerEvent('restartResource-s', resourceRoot, resourceName);
+end)
+
+addEventHandler('onClientKey', root, function(key, press)
+	if (not guiBrowser) then return end
+	if (key ~= 'escape' or not press) then return end
+	executeBrowserJavascript(guiGetBrowser(guiBrowser), 'emulateESC();');
+	cancelEvent();
 end)
 
 ---------------------------------------------------------------------

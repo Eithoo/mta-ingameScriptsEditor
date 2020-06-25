@@ -96,7 +96,8 @@ document.addEventListener('click', (evt) => {
 ///////////
 
 iziToast.settings({
-		timeout: 10000
+		timeout: 10000,
+		closeOnEscape: true
 });
 
 function resetSelectValues(){
@@ -192,11 +193,12 @@ function askForFilename(resourceName, resourceFiles, resourceRunning){
 							message: 'Rozpoczęto edycję pliku <b>'+Filename+'</b>.',
 							position: 'center',
 							closeOnClick: true,
+							closeOnEscape: true,
 							pauseOnHover: false,
 							targetFirst: false
 					});
 
-				}, false], // true to focus
+				}, true], // true to focus
 				['<button>Anuluj</button>', function (instance, toast, button, e) {
 					instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
 				}]
@@ -214,6 +216,7 @@ function askForFilename(resourceName, resourceFiles, resourceRunning){
 				timeout: 30000,
 				title: 'Uwaga',
 				overlay: true,
+				closeOnEscape: true,
 				message: 'Zasób jest wyłączony - nie da się zobaczyć treści plików.<br>Włącz skrypt <b>'+resourceName+'</b>, aby móc przeglądać i edytować jego treść.',
 				position: 'center'
 			});
@@ -254,6 +257,7 @@ function saveScriptKeyboardShortcut(){
 		drag: false,
 		timeout: 10000,
 		close: false,
+		closeOnEscape: true,
 		overlay: true,
 		displayMode: 1,
 		id: 'question',
@@ -273,6 +277,10 @@ function saveScriptKeyboardShortcut(){
 	});
 }
 
+function emulateESC(){
+	document.dispatchEvent(new KeyboardEvent('keyup', {keyCode: 27}));
+}
+
 function saveScript(){
 	const edit = document.getElementById('edit');
 	if (!edit) return;
@@ -289,6 +297,7 @@ function askForRestart(){
 		drag: false,
 		timeout: 10000,
 		close: false,
+		closeOnEscape: true,
 		overlay: true,
 		displayMode: 1,
 		progressBar: true,
